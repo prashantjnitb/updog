@@ -1,0 +1,27 @@
+.stars{
+  font-size:0;
+}
+.stars i {
+  color:#ccc;
+  font-size:1rem;
+  display:inline-block;
+  padding-right:.25em;
+}
+
+.stars i.active,
+.stars:hover i:hover{
+  color:#FFCD42;
+  cursor:pointer;
+  &:hover ~ i{
+    color:#ccc;
+  }
+}
+
+blockquote{
+  border-left:5px solid #eee;
+  margin-left:0;
+  padding-left:1em;
+  line-height:1.5;
+  margin-bottom:2em;
+  display:block;
+}

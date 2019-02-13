@@ -1,0 +1,34 @@
+// This is a manifest file that'll be compiled into application.js, which will include all the files
+// listed below.
+//
+// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
+// or vendor/assets/javascripts of plugins, if any, can be referenced here using a relative path.
+//
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// compiled file.
+//
+// Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
+// about supported directives.
+//
+//= require jquery
+//= require jquery_ujs
+//= require vue
+//= require_tree .
+
+
+
+
+$(function(){
+  $('.js-fit').fitText(.4);
+  $('[data-toggle]').on('click', function(){
+    $($(this).data('toggle')).toggle();
+  })
+  $(".js-track-link-click").on("click", function(e){
+    e.preventDefault()
+    var url = $(this).attr('href')
+    ga('send', 'event', 'login', 'click', url, {
+     'transport': 'beacon',
+     'hitCallback': function(){document.location = url;}
+   });
+  })
+});

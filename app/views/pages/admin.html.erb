@@ -1,0 +1,58 @@
+<div class='wrapper'>
+  <form>
+    <input type="search" name="email">
+  </form>
+  <% if @user %>
+    <%= @user.email %>
+    <% if @user.is_pro %>
+      <small>(pro)</small>:
+    <% end %>
+    <% @user.sites.each do |site| %>
+      <%= site.subdomain %> | <%= site.domain %>
+    <% end %>
+  <% end %>
+  <h2><%= @sites.length %> New Sites</h2>
+  <% @sites.each do |site| %>
+    <a href='http://<%= site.link %>'>http://<%= site.link %></a> - <%= site.creator.email if site.creator %><br>
+  <% end %>
+  <h2>Popular Sites</h2>
+  <% @popular_sites.each do |site| %>
+    <a href='http://<%= site.link %>'>http://<%= site.link %></a> - <%= site.creator.email if site.creator %> - <%= site.clicks_today.count %> clicks<br>
+  <% end %>
+  <h2>Stats</h2>
+    <strong>Average time it takes to go pro: </strong> <%= distance_of_time_in_words @avg_pro_time %><br>
+    <strong>Mean time it takes to go pro: </strong> <%= distance_of_time_in_words @mean_pro_time %><br>
+  <strong>Total Revenue: </strong> $<%= @revenue %><br>
+  <strong>Num users: </strong><%= @num_users %><br>
+  <strong>Num paying users: </strong><%= @paying_users %>
+  <br>
+  <br>
+  <table>
+    <tr>
+      <th>Week</th>
+      <th>New Users</th>
+      <th>New Upgrades</th>
+      <th>% Pro</th>
+    </tr>
+    <% @stats_by_week.each do |ts, val| %>
+      <tr>
+        <td>
+          <%= Date.strptime((ts.to_i / 1000).to_s,"%s") %>
+        </td>
+        <td>
+          <%= val[:new_users] %>
+        </td>
+        <td>
+          <%= val[:new_upgrades] %>
+        </td>
+        <td>
+          <%= val[:percent_pro].round(2) %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <!-- <script src='https://code.highcharts.com/highcharts.js'></script>
+  <%= render "chart", data: @daily_revenue.to_json.html_safe, title: "Revenue", el: 'daily-revenue'%>
+  <%= render "chart", data: @users.to_json.html_safe, title: "Users", el: 'container'%>
+  <%= render "chart", data: @pct_pro.to_json.html_safe, title: "% Pro", el: 'percent_pro'%> -->
+</div>

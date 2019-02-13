@@ -1,0 +1,63 @@
+<div class='wrapper'>
+  <h2>Pricing</h2>
+  <div class="left fifty">
+    <h3 class='pricing'>Basic: Free</h3>
+    <ul>
+      <li>1 Site</li>
+      <li>30 second cache time</li>
+      <li>Use folders created by this application</li>
+      <li class='no'>No site folder sharing</li>
+      <li class='no'>No custom document root</li>
+      <li class='no'>No support for markdown rendering</li>
+      <li class='no'>No contact forms</li>
+      <li class='no'>No password protected sites</li>
+    </ul>
+  </div>
+  <div class="left fifty">
+    <h3 class='pricing'>Pro: $<%= @price %> a year*</h3>
+    <ul>
+      <li>Unlimited sites</li>
+      <li>5 second cache time</li>
+      <li><a href='/news/use-any-folder-in-dropbox/'>Use any folder in Dropbox</a></li>
+      <li>Unlimited site folder sharing</li>
+      <li><a href='/news/deploy-jekyll/'>Custom document root</a></li>
+      <li><a href='https://jshawl.updog.co/markdown-example.md'>Support for markdown rendering</a></li>
+      <li><a href='/news/how-to-add-a-contact-form-to-your-website/'>Process contact forms</a></li>
+      <li>Password protected sites</li>
+      <li>Remove "Hosted on UpDog" footer</li>
+    </ul>
+    <% if current_user %>
+      <div style='text-align:center'>
+      <% if @subscribed %>
+      <A HREF="<%= ENV['paypal_host'] %>/cgi-bin/webscr?cmd=_subscr-find&alias=<%= ENV['paypal_subscription_id'] %>">
+        Unsubscribe
+      </A>
+      <% else %>
+        <form action="<%= ENV['paypal_host'] %>/cgi-bin/webscr" method="post" target="_top">
+          <input type="hidden" name="cmd" value="_s-xclick">
+          <input type="hidden" name="hosted_button_id" value="<%= ENV['paypal_button_id'] %>">
+          <input type="hidden" name="custom" value="<%= current_user.id %>">
+          <input type="image" src="https://www.paypalobjects.com/webstatic/en_US/i/btn/png/gold-rect-paypalcheckout-44px.png" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+          <img alt="" border="0" src="<%= ENV['paypal_host'] %>/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+      <% end %>
+      </div>
+    <% else %>
+    <div style='text-align:center'>
+      <br>
+      <a href='/auth/dropbox' class='dropbox'><span class='fa fa-dropbox'></span> Log In to Upgrade</a>
+    </div>
+    <% end %>
+  </div>
+
+    <p style='clear:both;'><br><br>*We offer a no-questions-asked refund policy on all purchases. <a href='/contact'>Contact us</a> at any time
+    if you'd like your money back.
+    </p>
+    <br>
+    <hr>
+    <br>
+  <h2>What Pro Members Are Saying:</h2>
+  <% @reviews.each do |review| %>
+    <blockquote><%= review.comment %></blockquote>
+  <% end %>
+</div>

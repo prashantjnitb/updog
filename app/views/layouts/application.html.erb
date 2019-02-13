@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+  <% if @title %>
+    <%= @title %>
+  <% else %>
+  UpDog - Publish your own website for free using Dropbox
+  <% end %>
+  </title>
+  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:image" content="https://updog.co/logo.png" />
+  <%= stylesheet_link_tag    'application', media: 'all' %>
+  <%= javascript_include_tag 'application' %>
+  <%= csrf_meta_tags %>
+  <meta name='description'content='Free static site hosting, powered by Dropbox'>
+  <meta charset="utf-8">
+  <meta name='viewport' content='width=device-width'>
+  <link rel="shortcut icon" href="/favicon-updog.ico">
+  <meta name="google-site-verification" content="39nuz6MUYwGPaYAxXU0YJXnj4Vwja1RXonuux-P7wCs" />
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-46279952-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+</head>
+<body>
+  <header>
+  <div class='wrapper'>
+    <h1><a href='/<%= @admin %>'><span>&#10145;</span> UpDog</a></h1>
+  <nav>
+  <a href='/news'>News</a>
+  <a href='/contact'>Contact Us</a>
+  <a href='/pricing' class='dropbox'>Pricing</a>
+  <a href='/faq'>FAQs</a>
+    <% if current_user %>
+     <%= link_to "Account", '/account' %>
+    <% else %>
+      <a href='https://updog.co/auth/dropbox' class='js-track-link-click'>Log in</a>
+    <% end %>
+  </nav>
+</div>
+</header>
+<section class='main'>
+<div class='wrapper'>
+  <% unless flash.empty? %>
+    <div class='notice'>
+      <%=  flash[:notice].html_safe %>
+    </div>
+  <% end %>
+</div>
+    <%= yield %>
+</section>
+
+<footer>
+  <div class='wrapper'>
+   &copy; UpDog <%= DateTime.now.strftime("%Y") %> |
+   <%= link_to "View Source", '/source' %> |
+   <a href='/feedback'>Feedback</a> |
+   <a href='/tos'>Terms of Service &amp; Privacy Policy</a>
+  </div>
+</footer>
+
+<!-- Drip -->
+<script type="text/javascript">
+  var _dcq = _dcq || [];
+  var _dcs = _dcs || {};
+  _dcs.account = '8064476';
+
+  (function() {
+    var dc = document.createElement('script');
+    dc.type = 'text/javascript'; dc.async = true;
+    dc.src = '//tag.getdrip.com/8064476.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(dc, s);
+  })();
+</script>
+</body>
+</html>

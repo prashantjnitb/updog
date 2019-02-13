@@ -1,0 +1,150 @@
+<style>
+  .fa-cog{
+    animation: goround 2s linear infinite;
+    transform-origin: 50% 50%;
+    margin-left:.25em;
+  }
+  .folder .fa-arrow-right{
+    position:absolute;
+    right:.5em;
+    top:50%;
+    transform: translateY(-50%);
+  }
+  .folder{
+    position: relative;
+    border-bottom:1px solid #ccc;
+    padding:.5em;
+    cursor: pointer;
+  }
+  .folder:hover{
+    background:rgba(0%,48.3%,91.1%, .1);
+  }
+  .folder.active{
+    background:rgba(0%,48.3%,91.1%, .2);
+  }
+  .folder a{
+    text-decoration:none;
+  }
+  #db-chooser{
+    overflow:hidden;
+  }
+  #db-chooser .back{
+    transition: all .2s ease;
+  }
+  #db-chooser .back.hidden{
+    margin-top:-2.5em;
+    border:none;
+  }
+  @keyframes goround{
+    0% {
+      transform: rotate(0deg)
+    }
+    50% {
+      transform: rotate(180deg)
+    }
+    100% {
+      transform: rotate(360deg)
+    }
+  }
+</style>
+<% if @site.errors.any? %>
+  <ul>
+  <% @site.errors.full_messages.each do |e| %>
+    <li> <%= e %></li>
+  <% end %>
+  </ul>
+<% end %>
+<%= form_for @site do |f| %>
+  <label>Where would you like to host your site?</label>
+  <div class='branded-radio js-toggle-select-folder'>
+    <% @providers.each do |provider| %>
+      <input type="radio" value="<%= provider %>"
+      <% if @site.provider == provider %>
+       checked="checked"
+       <% end %>
+      name="site[provider]" id="site_provider_<%= provider %>">
+      <label for="site_provider_<%= provider %>"><%= provider.titleize %></label>
+    <% end %>
+  </div>
+  <% if current_user.is_pro %>
+    <div class='js-select-folder' style="<%= 'display:none' if @site.provider != 'dropbox' %>">
+    <%= render 'select_folder' if @identity %>
+    <script>
+    $(".js-toggle-select-folder input").on("change", function(){
+      console.log(this.value)
+      if(this.value == 'dropbox'){
+        $(".js-select-folder").show()
+      }else{
+        $(".js-select-folder").hide()
+      }
+    })
+    </script>
+    </div>
+  <% end %>
+  <%= f.label :name %>
+  <div class='suffix-domain'>
+    <%= f.text_field :name %>
+  </div>
+  <br>
+  <%= f.label :domain do %>
+    Domain
+    <% if @site.domain.present? %>
+      <span class='domain-configuration-status <%= @site.domain_configuration[:klass] %>'
+            data-text='<%= @site.domain_configuration[:text] %>'>
+      </span>
+
+    <% end %>
+  <% end %>
+  <div class='domain-configuration-reason' style='display:none;'></div>
+  <script>
+    $(".domain-configuration-status").on("click", function(){
+      $(".domain-configuration-reason").toggle().html(
+        $(this).data("text")
+      )
+    })
+  </script>
+  <%= f.text_field :domain %> (optional) <small data-toggle=".instructions">What is this?</small><br><br>
+  <% if current_user.is_pro %>
+    <%= f.label :document_root %>
+    <%= f.text_field :document_root, placeholder: '_site/' %> (optional) <br><br>
+    <%= f.label :render_markdown %>
+    <% if @site.id %>
+      <%= f.check_box :render_markdown %> (optional)
+    <% else %>
+      <%= f.check_box :render_markdown, checked: true %>
+    <% end %>
+    <br><br>
+    <div class="password-protect">
+      <h2><i class='fa fa-lock'></i> Password Protection</h2>
+    <%= f.label :username %>
+    <%= f.text_field :username %>
+    <%= f.label :passcode %>
+    <% if @site.encrypted_passcode %>
+      This site is currently protected with a passcode. <%= link_to "Remove passcode", site_password_path(@site), method: :delete %>.<br>
+    <% end %>
+    <%= f.password_field :passcode, placeholder: 'Enter new passcode' %>
+    <%= f.label :passcode_logo_path %>
+    <%= f.text_field :passcode_logo_path, placeholder: '/images/logo.png' %>
+    <%= f.label :passcode_text %>
+    <%= f.text_field :passcode_text, placeholder: 'This site is protected with a passcode!' %>
+    </div>
+    <%= f.label :contact_email %>
+    <small>Use an alternate email to receive contact form submissions.</small>
+    <%= f.email_field :contact_email, class: 'input', placeholder: 'jesse@updog.co' %>
+    <br><br>
+  <% end %>
+  <%= f.submit 'Save', :class => 'btn-create' %>
+  <div class='instructions'>
+  <p>Using your own custom domain? To enable this feature:</p>
+  <ol>
+    <li>Log in to your DNS host.</li>
+    <li>Create a new CNAME record that points to updog.co</li>
+    <li>Save your changes and wait for the DNS to propagate.</li>
+    <li>Need help? email <a href='mailto:jesse@updog.co'>jesse@updog.co</a></li>
+  </ol>
+  <p>Here’s what that process looks like on Digital Ocean:</p>
+  <img src='https://dl.dropboxusercontent.com/s/4ksisxk7khatbi7/do.gif?dl=0'>
+  </div>
+  <br>
+  <br>
+<% end %>

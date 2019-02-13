@@ -1,0 +1,77 @@
+<% if current_user %>
+  <div class='wrapper'>
+    <div class='sites'>
+      <%= render 'create' %>
+      <% if @sites.length != 0 %>
+        <h2>Your Sites:</h2>
+        <ul>
+        <% @sites.each do |s| %>
+          <li class='cf'>
+            <div class='left'><%= link_to s.name, site_path( s ) %> </div> <div class='right'> <%= link_to 'Settings', edit_site_path( s ), :class => 'btn-edit' %>
+            </div>
+          </li>
+        <% end %>
+        </ul>
+      <% end %>
+      <% if @sites.count == 0 %>
+      <br>
+      <p>
+        Learn more about creating a site by viewing the video below:
+      </p>
+      <br>
+      <iframe src="https://player.vimeo.com/video/194891291?byline=0&portrait=0" width="640" height="359" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+      <p><a href="https://vimeo.com/194891291">Creating Your First UpDog Site</a> from <a href="https://vimeo.com/user34026330">Jesse Shawl</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <% else %>
+
+  <div class='wrapper index'>
+
+    <h2>Real.</h2>
+    <h2>Simple.</h2>
+    <h2>Hosting.</h2>
+    <p>Publish your own website for free using Dropbox or Google Drive</p>
+      <a href='/auth/dropbox' class='dropbox js-track-link-click'><span class='fa fa-dropbox'></span> Log In with Dropbox</a>
+      <a href='/auth/google' class='google js-track-link-click'><span class='fa fa-google'></span> Log In with Google</a>
+    <br>
+    <br>
+    <h3><i class='fa fa-line-chart'></i>
+       <span class='js-request-count'><%= number_with_delimiter(@count, :delimiter => ',') %></span>
+      requests served, and counting!
+    </h3>
+    <p>Unlimited file transfer and <em>no</em> storage limits.</p>
+    <h3><i class='fa fa-refresh'></i> Instantly Sync Your Website</h3>
+    <p>Add HTML, CSS, and JS files to your dropbox folder. We'll connect those to a free domain name.</p>
+    <h3><i class='fa fa-cloud-download'></i> No Software Required</h3>
+    <p>Drag and drop files into your Dropbox folder to upload them instantly.</p>
+    <h3><i class='fa fa-usd'></i> Straight-forward, Simple Pricing</h3>
+    <p>Basic accounts are free, <em>forever</em>. Upgrade to a pro membership for a yearly fee.</p>
+  </div>
+  <script>
+    $count = $(".js-request-count")
+    var num = parseInt($count.html().replace(/,/g,''))
+    var from = num - 180
+    increment()
+    function increment(){
+      var delay = Math.floor(Math.random() * 800)
+      setTimeout(function(){
+        $count.html(commafy(from++))
+        increment()
+      }, delay)
+    }
+    function commafy(int){
+      var str = "" + int
+      var out = ""
+      var digits = str.split("").reverse()
+      for(var i = 0; i < digits.length; i++){
+        if(i%3===0 && i !== 0){
+          out += ","
+        }
+        out += digits[i]
+      }
+      return out.split("").reverse().join("")
+    }
+  </script>
+  <% end %>
